@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantVillage 管理系统 - 控制台</title>
+    <!-- 引入提取出的独立外部现代 CSS -->
+    <link rel="stylesheet" href="/admin/static/css/admin_panel.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <header>
+        <div class="brand">
+            🌿 PlantVillage Admin Panel
+        </div>
+        <div class="user-profile">
+            <span style="font-weight: 500;">Hello, Admin</span>
+            <button class="btn-logout" onclick="logout()">安全退出</button>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- 1. 概览统领模块 -->
+        <section class="glass-panel" style="animation-delay: 0.1s;">
+            <h2 class="section-title">📊 聚合控制台 (Dashboard Overview)</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-name">激活用户总数 (Users)</div>
+                    <div class="stat-value skeleton" id="statUsers">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">认证专家人数 (Experts)</div>
+                    <div class="stat-value skeleton" id="statExperts">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">AI 诊断调用总数 (API Calls)</div>
+                    <div class="stat-value skeleton" id="statApi">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">病害图谱库总量 (AI Base + Contrib)</div>
+                    <div class="stat-value skeleton" id="statDiseases">...</div>
+                </div>
+                <div class="stat-card" style="border-color: rgba(255,180,100,0.3);">
+                    <div class="stat-name">待审计反馈数 (Pending Audits)</div>
+                    <div class="stat-value skeleton" id="statFeedbacks">...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 专家准入管理 -->
+        <section class="glass-panel" style="animation-delay: 0.2s;">
+            <h2 class="section-title">🔑 专家特权分发核准 (Expert Roles)</h2>
+            <form id="inviteForm" class="inline-form" onsubmit="generateInvite(event)">
+                <input type="text" id="targetUsername" class="form-input" placeholder="输入绑定用户名 (选填, 为空则生成通用码)">
+                <button type="submit" class="btn-action">生成 24H 邀请码</button>
+            </form>
+            <div id="inviteMsg" class="alert-box"></div>
+
+            <div class="table-container" style="margin-top: 1rem;">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>KEY UID</th>
+                            <th>🔐 激活码 (Hash)</th>
+                            <th>专属绑定账号</th>
+                            <th>验证状态</th>
+                            <th>签发时间</th>
+                            <th>过期阈值</th>
+                            <th>安全操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inviteTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3. 知识生态与贡献链路审核 -->
+        <section class="glass-panel" style="animation-delay: 0.3s;">
+            <h2 class="section-title">📥 专家知识贡献与审计池 (Content Review)</h2>
+
+            <div class="inline-form" style="margin-bottom: 1rem;">
+                <select id="reviewFilter" class="form-input form-select" onchange="loadContributions()"
+                    style="max-width: 200px;">
+                    <option value="待审核" selected>🛑 待审核队列 (Pending)</option>
+                    <option value="all">📚 历史全局记录 (All)</option>
+                </select>
+                <div style="color:var(--text-muted); font-size: 0.9rem; margin-left:1rem;">(可下拉切换查阅历史归档记录)</div>
+            </div>
+
+            <div class="table-container">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>审计单号</th>
+                            <th>专家签署方</th>
+                            <th>病害归类靶点</th>
+                            <th>活体样本库 (Img)</th>
+                            <th>干预防案提议</th>
+                            <th>流程状态 & 反馈</th>
+                            <th>人工复核动作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contributionTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3.5 用户正负反馈审计 -->
+        <section class="glass-panel" style="animation-delay: 0.35s;">
+            <h2 class="section-title">👍👎 用户识别反馈审计池 (Feedback Audit)</h2>
+            <p class="hint-text">负反馈（点踩）是最有价值的训练样本线索。审计每条反馈，采纳真实错误案例，忽略用户误报，为后续模型迭代提供高质量数据。</p>
+
+            <div class="inline-form" style="margin-bottom: 1rem; gap: 0.75rem;">
+                <select id="fbScoreFilter" class="form-input form-select" onchange="loadFeedbacks()"
+                    style="max-width:170px;">
+                    <option value="all">📊 全部反馈</option>
+                    <option value="-1" selected>👎 仅负反馈 (纠错)</option>
+                    <option value="1">👍 仅正反馈 (点赞)</option>
+                </select>
+                <select id="fbAuditFilter" class="form-input form-select" onchange="loadFeedbacks()"
+                    style="max-width:170px;">
+                    <option value="pending" selected>🕐 待审计</option>
+                    <option value="all">📚 全部记录</option>
+                </select>
+                <div style="color:var(--text-muted); font-size: 0.9rem;">切换过滤条件后会自动刷新列表</div>
+            </div>
+
+            <div class="table-container">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th style="width:6%">ID</th>
+                            <th style="width:10%">用户</th>
+                            <th style="width:8%">类型</th>
+                            <th style="width:12%">AI 预测结果</th>
+                            <th style="width:8%">置信度</th>
+                            <th style="width:12%">识别原图</th>
+                            <th style="width:18%">用户说明</th>
+                            <th style="width:8%">审计状态</th>
+                            <th style="width:18%">审计操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feedbackTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. 账户治理与AI引擎字典 -->
+        <section class="glass-panel" style="animation-delay: 0.4s;">
+            <h2 class="section-title">🧠 推理引擎语料库映射表 (Dataset Dict)</h2>
+            <p class="hint-text">
+                Kaggle 数据集底层映射关系：左侧为引擎运行时返回的英文结构化 `Label`，右侧为系统利用此表动态聚合的中文字典释义及防治规范输出。
+            </p>
+
+            <div class="table-container" style="margin-bottom: 3rem; max-height: 400px; overflow-y: auto;">
+                <table class="glass-table">
+                    <thead
+                        style="position: sticky; top: 0; background: rgba(27, 67, 50, 0.9); backdrop-filter: blur(10px);">
+                        <tr>
+                            <th style="width: 8%">CID</th>
+                            <th style="width: 25%">模型主键 (Hash Label)</th>
+                            <th style="width: 15%">病症主名 (Name)</th>
+                            <th style="width: 25%">生物靶点特征简述</th>
+                            <th style="width: 27%">库内嵌防治规范</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dictTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 1rem;">🛡️ 全域用户节点治理 (Identity Control)</h2>
+            <div class="table-container">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>平台 UID</th>
+                            <th>账号主体串 (Username)</th>
+                            <th>高阶权限 (Expert)</th>
+                            <th>根级别权限 (Root)</th>
+                            <th>账户风控态势</th>
+                            <th>治理抓手</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- App Logic -->
+    <script>
+        // Init load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            loadInvites();
+            loadContributions();
+            loadFeedbacks();
+            loadDictionary();
+            loadUsers();
+        });
+
+        async function logout() {
+            await fetch('/admin/api/logout', { method: 'POST' });
+            window.location.href = '/admin/login';
+        }
+
+        /* ----- Render Helpers ----- */
+        function getBadgeClassByStatus(status) {
+            if (status === '未使用' || status === '待审核') return 'badge-warning';
+            if (status === '已使用' || status === '已采纳') return 'badge-success';
+            if (status === '已过期' || status === '已撤销' || status === '已驳回') return 'badge-error';
+            return 'badge-gray';
+        }
+
+        // Stats
+        async function loadStats() {
+            try {
+                const res = await fetch('/admin/api/stats');
+                if (res.ok) {
+                    const data = await res.json();
+
+                    document.getElementById('statUsers').classList.remove('skeleton');
+                    document.getElementById('statUsers').innerText = data.total_users;
+
+                    document.getElementById('statExperts').classList.remove('skeleton');
+                    document.getElementById('statExperts').innerText = data.expert_count;
+
+                    document.getElementById('statDiseases').classList.remove('skeleton');
+                    document.getElementById('statDiseases').innerText = data.total_diseases_in_db;
+
+                    document.getElementById('statApi').classList.remove('skeleton');
+                    document.getElementById('statApi').innerText = data.total_api_calls;
+                }
+            } catch (e) { console.error('Stats loading failed', e); }
+
+            // Load pending feedback count separately
+            try {
+                const res2 = await fetch('/admin/api/feedbacks?score=-1&audit=pending');
+                if (res2.ok) {
+                    const d2 = await res2.json();
+                    const el = document.getElementById('statFeedbacks');
+                    el.classList.remove('skeleton');
+                    el.innerText = d2.length;
+                    el.style.color = d2.length > 0 ? '#ffb347' : '#a8dadc';
+                }
+            } catch (e) { }
+        }
+
+        // Invites
+        async function loadInvites() {
+            const res = await fetch('/admin/api/invites');
+            if (res.ok) {
+                const data = await res.json();
+                const tbody = document.getElementById('inviteTableBody');
+                tbody.innerHTML = '';
+                data.forEach(inv => {
+                    const row = document.createElement('tr');
+                    let revokeBtn = '-';
+                    if (inv.status === '未使用') {
+                        revokeBtn = `<button class="btn-sm btn-reject" onclick="revokeInvite(${inv.id})">🛡️ 撤回销权</button>`;
+                    }
+
+                    const badgeClass = getBadgeClassByStatus(inv.status);
+
+                    row.innerHTML = `
+                        <td>#${inv.id}</td>
+                        <td style="font-family: monospace; letter-spacing: 1px; color: var(--primary-light);">${inv.code}</td>
+                        <td>${inv.target ? `<span style="color:#e9c46a;">@${inv.target}</span>` : '<span style="color:#6c757d">未落锁 (全局可用)</span>'}</td>
+                        <td><span class="badge ${badgeClass}">${inv.status}</span></td>
+                        <td>${inv.created_at}</td>
+                        <td style="color: ${inv.status === '已过期' ? '#ff4d6d' : 'inherit'}">${inv.expires_at}</td>
+                        <td>${revokeBtn}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        async function generateInvite(e) {
+            e.preventDefault();
+            const username = document.getElementById('targetUsername').value;
+            const msgBox = document.getElementById('inviteMsg');
+
+            if (!username || username.trim() === '') {
+                msgBox.innerHTML = `<span style="color:#ffb3c1;">⚠️ 请输入用户名</span>`;
+                msgBox.style.opacity = 1;
+                setTimeout(() => { msgBox.style.opacity = 0; }, 5000);
+                return;
+            }
+
+            try {
+                const res = await fetch('/admin/api/invites', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    msgBox.innerHTML = `<span style="color:#a8dadc;">✅ 签发成功，特权码为: <strong>${data.code}</strong></span>`;
+                    msgBox.style.opacity = 1;
+                    document.getElementById('targetUsername').value = '';
+                    loadInvites();
+                } else {
+                    msgBox.innerHTML = `<span style="color:#ffb3c1;">⚠️ 生成中止: ${data.msg}</span>`;
+                    msgBox.style.opacity = 1;
+                }
+                setTimeout(() => { msgBox.style.opacity = 0; }, 5000);
+            } catch (e) { alert("网络异常"); }
+        }
+
+        async function revokeInvite(id) {
+            if (!confirm("⚠️ 高危操作：确定要从网关中撤回该尚未兑付的特权码吗？")) return;
+            const res = await fetch(`/admin/api/invites/${id}/revoke`, { method: 'PATCH' });
+            if (res.ok) loadInvites();
+        }
+
+        // Contributions
+        async function loadContributions() {
+            const status = document.getElementById('reviewFilter').value;
+            const res = await fetch(`/admin/api/contributions?status=${status}`);
+            if (res.ok) {
+                const data = await res.json();
+                const tbody = document.getElementById('contributionTableBody');
+                tbody.innerHTML = '';
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#adb5bd; padding:2rem;">📭 目前暂无符合过滤条件的审计案卷</td></tr>`;
+                    return;
+                }
+
+                data.forEach(c => {
+                    const row = document.createElement('tr');
+                    let actions = '-';
+                    if (c.status === '待审核') {
+                        actions = `
+                            <button class="btn-sm btn-approve" onclick="reviewContrib(${c.id}, 'approve')">准入合并</button>
+                            <button class="btn-sm btn-reject" onclick="reviewContrib(${c.id}, 'reject')">退件驳回</button>
+                        `;
+                    }
+
+                    const badgeClass = getBadgeClassByStatus(c.status);
+                    const reasonHtml = c.reject_reason ? `<div style="font-size: 0.8rem; color:#ffb3c1; margin-top: 4px;">由: ${c.reject_reason}</div>` : '';
+
+                    let imgHtml = '<span style="color:#6c757d">暂无标本</span>';
+                    if (c.image_url && c.image_url !== 'default.jpg') {
+                        const imgs = c.image_url.split(',');
+                        imgHtml = imgs.map(img => {
+                            const url = `/uploads/contributions/${img}`;
+                            return `<a href="${url}" target="_blank"><img class="thumb-img" src="${url}" onerror="this.style.display='none'" style="margin-right:4px;"></a>`;
+                        }).join('');
+                    }
+
+                    row.innerHTML = `
+                        <td>#C${c.id}</td>
+                        <td><span style="color:#a8dadc;">@${c.expert_name}</span></td>
+                        <td style="font-weight: 500;">${c.disease_name}</td>
+                        <td>${imgHtml}</td>
+                        <td style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${c.treatment_plan}">${c.treatment_plan}</td>
+                        <td>
+                            <span class="badge ${badgeClass}">${c.status}</span>
+                            ${reasonHtml}
+                        </td>
+                        <td>${actions}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        async function reviewContrib(id, action) {
+            let reason = "";
+            if (action === 'reject') {
+                reason = prompt("📋 请对专家输入审计退案附言 (原因说明):");
+                if (reason === null) return;
+            } else {
+                if (!confirm("✅ 您正在执行『核准入库』原子操作，其知识边界将即时作用于推理流，是否落实合并？")) return;
+            }
+
+            const res = await fetch(`/admin/api/contributions/${id}/review`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action, reason })
+            });
+            if (res.ok) {
+                loadContributions();
+                loadStats();
+            } else {
+                alert("操作失败");
+            }
+        }
+
+        // Feedback Audit
+        async function loadFeedbacks() {
+            const score = document.getElementById('fbScoreFilter').value;
+            const audit = document.getElementById('fbAuditFilter').value;
+            const res = await fetch(`/admin/api/feedbacks?score=${score}&audit=${audit}`);
+            const tbody = document.getElementById('feedbackTableBody');
+            tbody.innerHTML = '';
+
+            if (!res.ok) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#ff4d6d;padding:1.5rem;">⚠️ 加载失败</td></tr>`;
+                return;
+            }
+            const data = await res.json();
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#adb5bd;padding:2rem;">📭 暂无符合条件的反馈记录</td></tr>`;
+                return;
+            }
+
+            data.forEach(fb => {
+                const row = document.createElement('tr');
+                const isNeg = fb.score === -1;
+                const scoreLabel = isNeg
+                    ? `<span class="badge badge-error">👎 负反馈</span>`
+                    : `<span class="badge badge-success">👍 正反馈</span>`;
+
+                let auditBadge = '<span class="badge badge-warning">待审计</span>';
+                if (fb.audit_status === 'adopt') auditBadge = '<span class="badge badge-success">已采纳</span>';
+                else if (fb.audit_status === 'ignore') auditBadge = '<span class="badge badge-gray">已忽略</span>';
+
+                const imgHtml = fb.image_url
+                    ? `<a href="${fb.image_url}" target="_blank"><img src="${fb.image_url}" class="thumb-img" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.outerHTML='<span style=color:#6c757d>无图</span>'"></a>`
+                    : '<span style="color:#6c757d">无图</span>';
+
+                const reasonHtml = fb.reason
+                    ? `<span title="${fb.reason}" style="font-size:0.85rem;color:#e9c46a;">${fb.reason.length > 30 ? fb.reason.slice(0, 30) + '…' : fb.reason}</span>`
+                    : '<span style="color:#6c757d">—</span>';
+
+                let actions = '<span style="color:#6c757d;">—</span>';
+                if (!fb.audit_status) {
+                    actions = `
+                        <button class="btn-sm btn-approve" onclick="auditFeedback(${fb.id},'adopt')" title="确认此反馈有效，标记为待改进样本">✅ 采纳</button>
+                        <button class="btn-sm btn-reject" onclick="auditFeedback(${fb.id},'ignore')" title="用户搞错了，忽略此反馈">🚫 忽略</button>
+                    `;
+                }
+
+                row.innerHTML = `
+                    <td style="color:var(--text-muted);">#F${fb.id}</td>
+                    <td><span style="color:#a8dadc;">@${fb.username}</span></td>
+                    <td>${scoreLabel}</td>
+                    <td style="font-weight:500;font-size:0.9rem;" title="${fb.prediction}">${fb.common_name || fb.prediction || '—'}</td>
+                    <td style="color:#a8dadc;">${fb.confidence}</td>
+                    <td>${imgHtml}</td>
+                    <td>${reasonHtml}</td>
+                    <td>${auditBadge}</td>
+                    <td>${actions}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function auditFeedback(id, action) {
+            const actionText = action === 'adopt' ? '采纳（标记为有效纠错）' : '忽略（标记为误报）';
+            if (!confirm(`确认要将此反馈标记为「${actionText}」吗？`)) return;
+            const res = await fetch(`/admin/api/feedbacks/${id}/audit`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action })
+            });
+            if (res.ok) {
+                loadFeedbacks();
+                loadStats(); // Refresh pending count
+            } else {
+                alert('操作失败，请重试');
+            }
+        }
+
+        // Dictionary
+        async function loadDictionary() {
+            const res = await fetch('/admin/api/dictionary');
+            if (res.ok) {
+                const data = await res.json();
+                const tbody = document.getElementById('dictTableBody');
+                tbody.innerHTML = '';
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="color:var(--text-muted);">[ ${item.index} ]</td>
+                        <td style="font-family: monospace; color: var(--primary-light);">${item.label}</td>
+                        <td style="font-weight:500;">${item.common_name}</td>
+                        <td style="font-size:0.85rem; color:#adb5bd;">${item.symptoms}</td>
+                        <td style="font-size:0.85rem; color:#adb5bd;">${item.standard_treatment}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        // Users Management
+        async function loadUsers() {
+            const res = await fetch('/admin/api/users');
+            if (res.ok) {
+                const data = await res.json();
+                const tbody = document.getElementById('userTableBody');
+                tbody.innerHTML = '';
+                data.forEach(u => {
+                    const row = document.createElement('tr');
+                    const isActive = u.is_active;
+
+                    let banAction = `
+                        <button class="btn-sm ${isActive ? 'btn-reject' : 'btn-approve'}" onclick="toggleBanUser(${u.id}, ${!isActive})">
+                            ${isActive ? '⛔ 下达封杀令' : '♻️ 涤除封禁 (恢复)'}
+                        </button>
+                    `;
+                    if (u.is_admin) banAction = '<span class="badge badge-gray">超管豁免权 (Immutable)</span>';
+
+                    row.innerHTML = `
+                        <td>#U${u.id}</td>
+                        <td style="font-weight:600;">${u.username}</td>
+                        <td>${u.is_expert ? '<span class="badge badge-success">专家签注</span>' : '<span style="color:#6c757d">—</span>'}</td>
+                        <td>${u.is_admin ? '<span class="badge badge-warning">系统总管指令域</span>' : '<span style="color:#6c757d">—</span>'}</td>
+                        <td>${isActive
+                            ? '<span style="color:#a8dadc;">🟢 通信绿洲 (正常)</span>'
+                            : '<span style="color:#ffb3c1;">🔴 熔断封锁 (Disabled)</span>'}
+                        </td>
+                        <td>${banAction}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        async function toggleBanUser(id, targetState) {
+            const actionText = targetState ? "放行 (解封)" : "阻断斩杀 (封号)";
+            if (!confirm(`⚠️ 危险: 确定要对此节点实施『 ${actionText} 』管控动作吗？`)) return;
+
+            const res = await fetch(`/admin/api/users/${id}/ban`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ is_active: targetState })
+            });
+
+            if (res.ok) {
+                loadUsers();
+            } else {
+                const err = await res.json();
+                alert(err.msg);
+            }
+        }
+    </script>
+</body>
+
+</html>

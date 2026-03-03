@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantVillage 管理系统 - 登录</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/static/css/admin_login.css">
+</head>
+
+<body>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="login-container">
+        <div class="login-header">
+            <h1>PlantVillage Admin</h1>
+            <p>欢迎回来，请输入您的管理员凭证</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">管理员账号</label>
+                <input type="text" id="username" name="username" placeholder="请输入用户名" required autocomplete="username">
+            </div>
+
+            <div class="input-group">
+                <label for="password">登录密码</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required
+                    autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <span>登录系统</span>
+                <div class="spinner"></div>
+            </button>
+
+            <div id="message"></div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = e.target.username.value;
+            const password = e.target.password.value;
+            const msgBox = document.getElementById('message');
+            const btn = document.getElementById('submitBtn');
+
+            // Reset UI
+            msgBox.className = '';
+            msgBox.style.display = 'none';
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/admin/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    btn.classList.remove('loading');
+                    btn.style.background = '#2a9d8f';
+                    btn.querySelector('span').innerText = '登录成功...';
+                    btn.querySelector('span').style.opacity = '1';
+                    setTimeout(() => {
+                        window.location.href = '/admin/';
+                    }, 600);
+                } else {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    msgBox.innerText = data.msg || '认证失败，请重试';
+                    msgBox.className = 'error';
+                }
+            } catch (err) {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                msgBox.innerText = '网络连接异常，请检查服务状态';
+                msgBox.className = 'error';
+            }
+        });
+    </script>
+</body>
+
+</html>

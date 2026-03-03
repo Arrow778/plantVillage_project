@@ -1,0 +1,17 @@
+basketball
+book
+bottle
+cat
+clothes
+computer
+dog
+eyeglasses
+flower
+knife
+mouse
+pen
+phone
+shoe
+table
+tree
+watch

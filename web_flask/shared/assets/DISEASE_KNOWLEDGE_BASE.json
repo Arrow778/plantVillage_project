@@ -1,0 +1,197 @@
+{
+    "Apple___Apple_scab": {
+        "common_name": "苹果黑星病",
+        "symptoms": "叶片和果实上出现暗褐色至黑色的绒毛状斑点，后期病斑可能开裂或脱落。",
+        "standard_treatment": "使用代森锰锌、苯醚甲环唑等杀菌剂喷洒；及时清理果园内落叶和病果，减少越冬初侵染源。"
+    },
+    "Apple___Black_rot": {
+        "common_name": "苹果黑腐病",
+        "symptoms": "叶片产生“蛙眼状”圆形斑，外围紫色，中央褐色；果实变褐腐烂并在表面产生黑色小点。",
+        "standard_treatment": "修剪并销毁病枝；萌芽前喷布石硫合剂清除病源，生长期可选用多菌灵等药剂交替防治。"
+    },
+    "Apple___Cedar_apple_rust": {
+        "common_name": "苹果雪松锈病",
+        "symptoms": "叶片正面初期出现黄色小斑，后期叶片背面长出黄色毛状或管状的锈孢子器。",
+        "standard_treatment": "需彻底清除果园附近的桧柏等转主寄主。在初春降雨前喷洒三唑酮、戊唑醇进行预防。"
+    },
+    "Apple___healthy": {
+        "common_name": "苹果 (健康)",
+        "symptoms": "植株及叶片表现正常，无明显病害症状，色泽翠绿。",
+        "standard_treatment": "继续保持良好的水肥管理和常规病虫害预防措施。"
+    },
+    "Background_without_leaves": {
+        "common_name": "非植物/背景背景",
+        "symptoms": "图像未检测到核心目标植物的有效区域。",
+        "standard_treatment": "请确保提供一张包含植物患病叶片核心区域的清晰照片以供模型诊断。"
+    },
+    "Blueberry___healthy": {
+        "common_name": "蓝莓 (健康)",
+        "symptoms": "蓝莓叶片健康，没有斑点、变色或萎缩现象。",
+        "standard_treatment": "注意保持土壤呈弱酸性，合理灌溉并控制环境湿度以维持健康。"
+    },
+    "Cherry___Powdery_mildew": {
+        "common_name": "樱桃白粉病",
+        "symptoms": "主要危害叶片和嫩梢，叶面、枝梢表面布满白色粉状物（菌丝体与分生孢子），严重时叶片扭曲皱缩。",
+        "standard_treatment": "加强通风透光，降低湿度。发病初期喷洒腈菌唑、三唑酮或武夷菌素等药剂。"
+    },
+    "Cherry___healthy": {
+        "common_name": "樱桃 (健康)",
+        "symptoms": "樱桃叶片舒展、绿色且光泽良好，无病斑与粉状物。",
+        "standard_treatment": "正常肥水管理，在生长关键期使用保护性杀菌剂做常规预防即可。"
+    },
+    "Corn___Cercospora_leaf_spot Gray_leaf_spot": {
+        "common_name": "玉米灰斑病",
+        "symptoms": "叶片上形成矩形至条状的褐色斑块，常受叶脉限制，严重时病斑融合导致叶片枯死。",
+        "standard_treatment": "种植抗病品种；实行轮作，深翻清除病残体；发病初期喷施吡唑醚菌酯或丙环唑等进行防治。"
+    },
+    "Corn___Common_rust": {
+        "common_name": "玉米锈病",
+        "symptoms": "叶片两面初生淡黄色及棕褐色的小夏孢子堆，散出金黄色粉末。后期产生黑色冬孢子堆。",
+        "standard_treatment": "选用抗病品种，合理密植。发病初期使用三唑酮、氟环唑等三唑类药剂全田均匀喷雾。"
+    },
+    "Corn___Northern_Leaf_Blight": {
+        "common_name": "玉米大斑病",
+        "symptoms": "下部叶片开始发病，产生青灰色水浸状斑点，后扩展成边缘暗褐色、中央淡褐色的梭形大斑。",
+        "standard_treatment": "适期早播，增施磷钾肥提升抗性。在心叶末期至抽雄期，可喷施代森锰锌、百菌清或苯甲·丙环唑。"
+    },
+    "Corn___healthy": {
+        "common_name": "玉米 (健康)",
+        "symptoms": "玉米叶鞘与叶片均呈绿色，无水渍、无黄斑。",
+        "standard_treatment": "科学浇水施肥，在主要病害易发期可酌情喷洒保护性广谱杀菌剂。"
+    },
+    "Grape___Black_rot": {
+        "common_name": "葡萄黑腐病",
+        "symptoms": "果实出现褐色水渍状小斑，后迅速扩大发黑腐烂失水僵化（僵果），叶片呈红褐色多角形病斑。",
+        "standard_treatment": "彻底清除病果、残枝落叶集中烧毁。萌芽前喷石硫合剂，开花前后可选用戊唑醇、福美双等药剂防护。"
+    },
+    "Grape___Esca_(Black_Measles)": {
+        "common_name": "葡萄黑痘病/埃斯卡病",
+        "symptoms": "叶片脉间退绿发黄或发红且边缘常保留绿色（虎斑状），果实表面可能产生具有晕圈的细小黑斑点。",
+        "standard_treatment": "主要由修剪伤口感染引起。建议避免雨天修剪，对大的修剪伤口涂抹愈合剂或杀菌剂保护。"
+    },
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": {
+        "common_name": "葡萄褐斑病",
+        "symptoms": "叶背产生灰色至暗褐色霉层，叶面出现近圆形的暗褐色或中心灰白色病斑，严重时引发早期落叶。",
+        "standard_treatment": "改善果架通风透光条件；结合清园集中烧毁落叶。生长期可喷施波尔多液或代森锰锌等药剂。"
+    },
+    "Grape___healthy": {
+        "common_name": "葡萄 (健康)",
+        "symptoms": "葡萄叶片完整，无穿孔，无水渍，无霉层。",
+        "standard_treatment": "合理修剪保证果园通风，避免湿度过大，做常规田间病虫预防管理。"
+    },
+    "Orange___Haunglongbing_(Citrus_greening)": {
+        "common_name": "柑橘黄龙病",
+        "symptoms": "叶片呈现斑驳黄化（不均匀变黄），果实小且着色不均（红鼻子果），根系腐烂。",
+        "standard_treatment": "属毁灭性细菌病害。必须彻底砍除病树并集中烧毁；严格防治传播媒介木虱（使用阿维菌素、啶虫脒等）。"
+    },
+    "Peach___Bacterial_spot": {
+        "common_name": "桃树细菌性穿孔病",
+        "symptoms": "叶片初期出现水渍状小点，后变为多角形紫褐色斑，中心干枯脱落形成穿孔；果实有暗色粗糙凹斑。",
+        "standard_treatment": "增施有机肥提升树势。早春喷布波尔多液，生长期可用农用链霉素、中生菌素或春雷霉素等药剂交替使用。"
+    },
+    "Peach___healthy": {
+        "common_name": "桃树 (健康)",
+        "symptoms": "桃叶修长，色泽纯正，未见穿孔与黄化。",
+        "standard_treatment": "加强修剪维持树体透光率，并做好常规的水肥调控。"
+    },
+    "Pepper,_bell___Bacterial_spot": {
+        "common_name": "甜椒细菌性叶斑病",
+        "symptoms": "叶面产生细小水浸状黄绿色斑点，后变为褐色中央微凹陷的病斑，环境潮湿时会溢出菌脓。",
+        "standard_treatment": "采用无病种子并进行温汤浸种；发病初期及时喷洒氢氧化铜、春雷霉素等药剂控制蔓延。"
+    },
+    "Pepper,_bell___healthy": {
+        "common_name": "甜椒 (健康)",
+        "symptoms": "甜椒叶片肥厚，无穿孔或斑点，色泽良好。",
+        "standard_treatment": "保持温室或田间良好的通风条件，避免大水漫灌。"
+    },
+    "Potato___Early_blight": {
+        "common_name": "马铃薯早疫病",
+        "symptoms": "叶片产生具有明显同心轮纹的暗褐色圆形病斑，下部老叶先发病，潮湿时病斑长出黑霉。",
+        "standard_treatment": "增施磷肥钾肥；发病初可喷施代森锰锌、苯醚甲环唑或嘧菌酯等真菌剂，每隔7-10天喷一次。"
+    },
+    "Potato___Late_blight": {
+        "common_name": "马铃薯晚疫病",
+        "symptoms": "叶尖或叶缘产生水渍状绿褐色大斑，天气潮湿时病斑边缘有白色霉状物，蔓延极快会导致茎叶腐烂枯死。",
+        "standard_treatment": "一旦发现中心病株应立即拔除；全田使用霜脲·锰锌、烯酰吗啉或氟啶胺等药剂进行紧急防治。"
+    },
+    "Potato___healthy": {
+        "common_name": "马铃薯 (健康)",
+        "symptoms": "土豆叶冠长势正常，无水浸状斑或枯萎。",
+        "standard_treatment": "做好田间排涝防涝，并在适宜生长期施足底肥。"
+    },
+    "Raspberry___healthy": {
+        "common_name": "树莓 (健康)",
+        "symptoms": "树莓叶片边缘锯齿完整，叶面粗糙但无退绿与霉病迹象。",
+        "standard_treatment": "注重光照和排水管理，定期清除老枝促进新枝萌发。"
+    },
+    "Soybean___healthy": {
+        "common_name": "大豆 (健康)",
+        "symptoms": "大豆复叶完整舒张，表面绿意饱满，无虫咬与黄化。",
+        "standard_treatment": "保持合理的株行距，避免过密引起生境高湿。"
+    },
+    "Squash___Powdery_mildew": {
+        "common_name": "南瓜白粉病",
+        "symptoms": "叶面、叶背出现白色圆形小粉斑，逐渐扩散连片，致使整个叶片布满白色粉末，最后叶片发黄枯焦。",
+        "standard_treatment": "控制氮肥用量。发病初期使用三唑酮、腈菌唑、硫磺悬浮剂等进行喷洒，注意叶片正反面均要喷到。"
+    },
+    "Strawberry___Leaf_scorch": {
+        "common_name": "草莓褐斑病（蛇眼病）",
+        "symptoms": "叶片上产生紫红色小圆斑，后期中心变为灰白色（似蛇眼），严重时病斑融合导致叶片干枯死亡。",
+        "standard_treatment": "采果后彻底清理带有病原的枯叶。生长期内可用甲基硫菌灵、多菌灵或百菌清进行喷雾防治。"
+    },
+    "Strawberry___healthy": {
+        "common_name": "草莓 (健康)",
+        "symptoms": "草莓叶片边缘深色锯齿清晰，叶肉翠绿健康。",
+        "standard_treatment": "注意大棚内的通风排湿工作，避免高温高湿引发真菌性病害。"
+    },
+    "Tomato___Bacterial_spot": {
+        "common_name": "番茄细菌性斑点病",
+        "symptoms": "叶部出现暗绿色水渍状小斑点，后转为褐色至黑色且周围常有黄色晕圈；青果上可出现黑褐色隆起的小斑。",
+        "standard_treatment": "播前种子进行消毒处理（热汤或药液）。发病初期喷施中生菌素、农用链霉素、氢氧化铜等防制。"
+    },
+    "Tomato___Early_blight": {
+        "common_name": "番茄早疫病",
+        "symptoms": "从下部叶片开始发病，病斑呈深褐色，有明显的同心轮纹（轮纹病），潮湿时有黑霉。",
+        "standard_treatment": "发病初期及时摘除病叶，喷施代森锰锌、苯甲·丙环唑、嘧菌酯等真菌类药剂控制蔓延。"
+    },
+    "Tomato___Late_blight": {
+        "common_name": "番茄晚疫病",
+        "symptoms": "叶片边缘生水浸状暗绿色大斑块，高湿时长出白霉；果实染病长出硬质褐色云纹状斑块。",
+        "standard_treatment": "属于毁灭性病害。发现病斑立即选用氟菌·霜霉威、甲霜灵锰锌、烯酰吗啉等药剂进行强力喷施抑制。"
+    },
+    "Tomato___Leaf_Mold": {
+        "common_name": "番茄叶霉病",
+        "symptoms": "主要危及叶背，初期出现浅黄色褪绿斑点，随后叶背长出灰褐色或黑紫色致密绒状霉层。",
+        "standard_treatment": "加强棚室通风降湿（尤其是夜间）。发病期常采用氟硅唑、多氧清、春雷霉素等药剂治疗。"
+    },
+    "Tomato___Septoria_leaf_spot": {
+        "common_name": "番茄斑枯病",
+        "symptoms": "叶片出现圆形或近圆形的褪绿小斑，中心呈灰白色并着生黑色小粒点（分生孢子器）。",
+        "standard_treatment": "及时摘去下部老病叶；发病初使用百菌清、杀毒矾或苯醚甲环唑水分散粒剂进行药剂防控。"
+    },
+    "Tomato___Spider_mites Two-spotted_spider_mite": {
+        "common_name": "番茄红蜘蛛 (二斑叶螨)",
+        "symptoms": "叶片背面受害，叶面出现褪绿斑块至灰白色斑点，严重时叶片发黄枯焦，并可见细密的蛛丝网。",
+        "standard_treatment": "清理田间杂草破坏其越冬场所；虫害发生时及时选用阿维菌素、螺螨酯、哒螨灵等专杀药剂。"
+    },
+    "Tomato___Target_Spot": {
+        "common_name": "番茄靶斑病",
+        "symptoms": "叶面上产生圆形至不规则褐色斑，病斑中心有隐约的同心轮纹且类似靶心，常混生有黄色晕圈。",
+        "standard_treatment": "需区别于早疫病。推荐使用苯醚甲环唑与嘧菌酯的复配药剂，彻底清除田间病残体。"
+    },
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+        "common_name": "番茄黄化曲叶病毒病",
+        "symptoms": "顶端叶片明显褪绿发黄并向上卷曲，植株严重矮化，开花不结实。",
+        "standard_treatment": "病毒病极难治愈，关键在防。主要通过防控烟粉虱（吡虫啉、啶虫脒）切断传播路径，发现病株尽早拔除。"
+    },
+    "Tomato___Tomato_mosaic_virus": {
+        "common_name": "番茄花叶病毒病",
+        "symptoms": "叶片呈现黄绿相间的斑驳花叶，叶面皱缩不平，可能引发蕨叶或植株矮化。",
+        "standard_treatment": "不可治愈。接触病株后应洗手消毒防止汁液摩擦传染，可喷施宁南霉素或氨基寡糖素提高植株抗逆性。"
+    },
+    "Tomato___healthy": {
+        "common_name": "番茄 (健康)",
+        "symptoms": "番茄植株生长健壮，叶片舒展、绿色纯正。",
+        "standard_treatment": "保持科学的植株密度，配合合理的磷钾肥与水分供应维持植株抗病性。"
+    }
+}

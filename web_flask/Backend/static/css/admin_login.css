@@ -1,0 +1,223 @@
+ :root {
+     --primary: #2d6a4f;
+     --primary-light: #40916c;
+     --primary-dark: #1b4332;
+     --bg-gradient: linear-gradient(135deg, #081c15 0%, #1b4332 100%);
+     --text-main: #f8f9fa;
+     --text-muted: #d8f3dc;
+     --error-color: #ef233c;
+ }
+
+ * {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+ }
+
+ body {
+     background: var(--bg-gradient);
+     min-height: 100vh;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: var(--text-main);
+     position: relative;
+     overflow: hidden;
+ }
+
+ /* 装饰性背景元素 */
+ .bg-shape {
+     position: absolute;
+     border-radius: 50%;
+     background: rgba(255, 255, 255, 0.03);
+     backdrop-filter: blur(5px);
+     z-index: 0;
+     animation: float 10s infinite ease-in-out alternate;
+ }
+
+ .shape-1 {
+     width: 400px;
+     height: 400px;
+     top: -100px;
+     left: -100px;
+ }
+
+ .shape-2 {
+     width: 300px;
+     height: 300px;
+     bottom: -50px;
+     right: -50px;
+     animation-delay: -5s;
+ }
+
+ @keyframes float {
+     0% {
+         transform: translateY(0) rotate(0deg);
+     }
+
+     100% {
+         transform: translateY(30px) rotate(10deg);
+     }
+ }
+
+ .login-container {
+     position: relative;
+     z-index: 1;
+     background: rgba(255, 255, 255, 0.08);
+     backdrop-filter: blur(20px);
+     -webkit-backdrop-filter: blur(20px);
+     border: 1px solid rgba(255, 255, 255, 0.1);
+     border-radius: 24px;
+     padding: 3rem;
+     width: 100%;
+     max-width: 420px;
+     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+     animation: form-entry 0.6s ease-out forwards;
+     opacity: 0;
+     transform: translateY(20px);
+ }
+
+ @keyframes form-entry {
+     to {
+         opacity: 1;
+         transform: translateY(0);
+     }
+ }
+
+ .login-header {
+     text-align: center;
+     margin-bottom: 2.5rem;
+ }
+
+ .login-header h1 {
+     font-size: 1.8rem;
+     font-weight: 600;
+     letter-spacing: -0.5px;
+     margin-bottom: 0.5rem;
+     background: linear-gradient(to right, #95d5b2, #d8f3dc);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+ }
+
+ .login-header p {
+     color: var(--text-muted);
+     font-size: 0.95rem;
+     font-weight: 300;
+ }
+
+ .input-group {
+     margin-bottom: 1.5rem;
+     position: relative;
+ }
+
+ .input-group label {
+     display: block;
+     font-size: 0.85rem;
+     font-weight: 500;
+     margin-bottom: 0.5rem;
+     color: var(--text-muted);
+     transition: color 0.3s;
+ }
+
+ .input-group input {
+     width: 100%;
+     padding: 1rem 1.2rem;
+     background: rgba(0, 0, 0, 0.2);
+     border: 1px solid rgba(255, 255, 255, 0.1);
+     border-radius: 12px;
+     font-size: 1rem;
+     color: #fff;
+     transition: all 0.3s ease;
+     outline: none;
+ }
+
+ .input-group input:focus {
+     background: rgba(0, 0, 0, 0.3);
+     border-color: var(--primary-light);
+     box-shadow: 0 0 0 4px rgba(64, 145, 108, 0.2);
+ }
+
+ .btn-submit {
+     width: 100%;
+     padding: 1rem;
+     border: none;
+     border-radius: 12px;
+     background: var(--primary);
+     color: white;
+     font-size: 1rem;
+     font-weight: 600;
+     cursor: pointer;
+     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+     margin-top: 1rem;
+     position: relative;
+     overflow: hidden;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+
+ .btn-submit:hover {
+     background: var(--primary-light);
+     transform: translateY(-2px);
+     box-shadow: 0 10px 20px -10px rgba(64, 145, 108, 0.6);
+ }
+
+ .btn-submit:active {
+     transform: translateY(0);
+ }
+
+ /* Loading Spinner */
+ .spinner {
+     display: none;
+     width: 20px;
+     height: 20px;
+     border: 3px solid rgba(255, 255, 255, 0.3);
+     border-radius: 50%;
+     border-top-color: #fff;
+     animation: spin 1s ease-in-out infinite;
+     position: absolute;
+ }
+
+ @keyframes spin {
+     to {
+         transform: rotate(360deg);
+     }
+ }
+
+ .btn-submit.loading span {
+     opacity: 0;
+ }
+
+ .btn-submit.loading .spinner {
+     display: block;
+ }
+
+ #message {
+     margin-top: 1.5rem;
+     padding: 0.8rem;
+     border-radius: 8px;
+     font-size: 0.9rem;
+     text-align: center;
+     display: none;
+     animation: fade-in 0.3s ease;
+ }
+
+ #message.error {
+     display: block;
+     background: rgba(239, 35, 60, 0.1);
+     border: 1px solid rgba(239, 35, 60, 0.3);
+     color: #ff4d6d;
+ }
+
+ @keyframes fade-in {
+     from {
+         opacity: 0;
+         transform: translateY(-5px);
+     }
+
+     to {
+         opacity: 1;
+         transform: translateY(0);
+     }
+ }

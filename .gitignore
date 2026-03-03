@@ -1,0 +1,65 @@
+# === General ===
+.DS_Store
+*.swp
+*.log
+*.zip
+*.rar
+*.7z
+
+# === Android ===
+# Gradle files
+.gradle/
+build/
+*/build/
+captures/
+
+# Local configuration file (contains local paths to SDKs)
+local.properties
+
+# Project-wide Gradle settings
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+*.iml
+
+# Android Studio / IntelliJ files
+.idea/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services file (if applicable)
+# google-services.json
+
+# APKs / Bundles
+*.apk
+*.bundle
+
+# === Web / Python (Flask) ===
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+
+# Flask uploads or instance folders
+instance/
+web_flask/Backend/uploads/
+web_flask/APIs/uploads/
+web_flask/shared/uploads/
+
+# === Training Code & Models ===
+trian_code/dataset_plant/
+trian_code/models/*.pth
+trian_code/models/*.tflite
+trian_code/models/*.h5
+trian_code/dataset_check_output.txt
+
+# === VS Code ===
+.vscode/
