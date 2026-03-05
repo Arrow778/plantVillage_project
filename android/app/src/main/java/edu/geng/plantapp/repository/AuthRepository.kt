@@ -13,20 +13,31 @@ sealed class Resource<T>(val data: T? = null, val message: String? = null) {
     class Loading<T>(data: T? = null) : Resource<T>(data)
 }
 
+/**
+ * 全局错误消息解析工具：从 API errorBody 中提取可读的错误信息。
+ * 支持的字段优先级：msg > message > error > detail
+ * 如果 errorBody 为空或解析失败，则返回 fallback。
+ */
+fun parseApiError(errorBody: String?, fallback: String = "操作失败"): String {
+    if (errorBody.isNullOrBlank()) return fallback
+    return try {
+        val json = JSONObject(errorBody)
+        json.optString("msg", null)
+            ?: json.optString("message", null)
+            ?: json.optString("error", null)
+            ?: json.optString("detail", null)
+            ?: fallback
+    } catch (e: Exception) {
+        // 如果不是JSON格式（如纯文本），直接返回 fallback 而非原始内容
+        fallback
+    }
+}
+
 class AuthRepository(
     private val authApi: AuthApi,
     private val dsManager: DataStoreManager
 ) {
 
-    private fun parseErrorMsg(errorBody: String?, fallback: String): String {
-        if (errorBody.isNullOrEmpty()) return fallback
-        return try {
-            val jsonObject = JSONObject(errorBody)
-            jsonObject.optString("msg", fallback)
-        } catch (e: Exception) {
-            errorBody
-        }
-    }
 
     suspend fun loginUser(req: LoginRequest, rememberMe: Boolean): Resource<LoginResponse> {
         return try {
@@ -43,9 +54,7 @@ class AuthRepository(
                     Resource.Error(body?.msg ?: "无法获取访问令牌")
                 }
             } else {
-                // Read Retrofit Error Body
-                val errorBodyStr = response.errorBody()?.string()
-                val errorMsg = parseErrorMsg(errorBodyStr, response.message())
+                val errorMsg = parseApiError(response.errorBody()?.string(), "登录失败: ${response.code()}")
                 Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
@@ -59,8 +68,7 @@ class AuthRepository(
             if (response.isSuccessful) {
                 Resource.Success(response.body()!!)
             } else {
-                val errorBodyStr = response.errorBody()?.string()
-                val errorMsg = parseErrorMsg(errorBodyStr, "注册失败: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "注册失败: ${response.code()}")
                 Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
@@ -104,8 +112,7 @@ class AuthRepository(
             if (response.isSuccessful) {
                 Resource.Success(response.body()?.msg ?: "认证成功")
             } else {
-                val errorBodyStr = response.errorBody()?.string()
-                val errorMsg = parseErrorMsg(errorBodyStr, response.message())
+                val errorMsg = parseApiError(response.errorBody()?.string(), "专家认证失败: ${response.code()}")
                 Resource.Error(errorMsg)
             }
         } catch (e: Exception) {

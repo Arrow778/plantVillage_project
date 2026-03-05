@@ -30,8 +30,8 @@ class ResultViewModel(
             _wikiState.value = WikiState.Loading
             when (val res = predictRepository.fetchWikiContent(diseaseName)) {
                 is Resource.Success -> {
-                    res.data?.let {
-                        _wikiState.value = WikiState.Success(it)
+                    res.data?.let { response ->
+                        _wikiState.value = WikiState.Success(response)
                     } ?: run {
                         _wikiState.value = WikiState.Error("服务器返回空字典实体")
                     }
@@ -43,6 +43,13 @@ class ResultViewModel(
             }
         }
     }
+
+    /** 强制绕过缓存重新请求，用于"重新检测"按钮 */
+    fun retryWikiInfo(diseaseName: String) {
+        PredictRepository.clearCacheForLabel(diseaseName)  // 清 repo 缓存
+        fetchWikiInfo(diseaseName)
+    }
+
     fun resetWikiState() {
         _wikiState.value = WikiState.Idle
     }

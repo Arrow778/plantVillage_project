@@ -235,7 +235,7 @@ fun LoginScreen(
                             color = TextMainDark
                         )
                         Text(
-                            text = "绿洲生态鉴权终端",
+                            text = "农作物鉴别终端",
                             fontSize = 14.sp,
                             color = TextMutedDark,
                             modifier = Modifier.padding(top = 4.dp)

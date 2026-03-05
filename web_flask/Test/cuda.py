@@ -33,11 +33,3 @@ if gpus:
 else:
     print("😭 依然没有识别到 GPU，请检查显卡驱动是否支持 CUDA 12.4+")
 
-"""
-现在你仔细解析PlantVillage文件夹下已有的代码，大概说明情况：
-android 是移动端的应用；
-train_code 是训练pytorch的数据集和代码；
-web_flask/APIs 是接口代码
-web_flask/Backend是后台管理系统
-你先解析。
-"""

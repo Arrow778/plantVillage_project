@@ -69,7 +69,8 @@ fun HomeScreen(
         FeedbackRepository(
             NetworkClient.predictApiExtension,
             NetworkClient.feedbackApi,
-            dsManager
+            dsManager,
+            context= context
         )
     }
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(feedbackRepo))
@@ -328,6 +329,18 @@ fun HomeScreen(
                                             color = ErrorColor,
                                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
                                         )
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                        Button(
+                                            onClick = {
+                                                recognitionResult?.label?.let {
+                                                    resultViewModel.retryWikiInfo(it)
+                                                }
+                                            },
+                                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryLight),
+                                            shape = RoundedCornerShape(10.dp)
+                                        ) {
+                                            Text("🔄 重新检测", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                        }
                                     }
                                 }
                             }
@@ -378,6 +391,7 @@ fun HomeScreen(
                                         wikiData?.symptoms?.let { syms ->
                                             if (syms.isNotEmpty()) {
                                                 Text(
+                                                    
                                                     "典型症状表征",
                                                     fontWeight = FontWeight.SemiBold,
                                                     color = TextMainDark,
@@ -438,81 +452,60 @@ fun HomeScreen(
                                             }
                                         }
 
-                                        Spacer(modifier = Modifier.height(24.dp))
-
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            TextButton(onClick = {
-                                                viewModel.clearPrediction()
-                                                resultViewModel.resetWikiState()
-                                            }) {
-                                                Text(
-                                                    "清除诊断",
-                                                    color = ErrorColor,
-                                                    fontSize = 14.sp
-                                                )
-                                            }
-
-                                            Row {
-                                                val historyId =
-                                                    (syncState as? HistorySyncState.Success)?.historyId
-                                                if (historyId != null && historyId != -1) {
-                                                    // 👍 Like button
-                                                    TextButton(
-                                                        onClick = {
-                                                            viewModel.submitFeedback(
-                                                                historyId,
-                                                                1,
-                                                                ""
-                                                            )
-                                                        },
-                                                        enabled = feedbackState !is Resource.Loading && feedbackState !is Resource.Success
-                                                    ) {
-                                                        if (feedbackState is Resource.Success) {
-                                                            Text(
-                                                                "✅ 已反馈",
-                                                                color = SuccessColor,
-                                                                fontSize = 14.sp
-                                                            )
-                                                        } else {
-                                                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                                                Icon(
-                                                                    Icons.Default.ThumbUp,
-                                                                    contentDescription = "准确",
-                                                                    tint = SuccessColor,
-                                                                    modifier = Modifier.size(15.dp)
-                                                                )
-                                                                Spacer(Modifier.width(4.dp))
-                                                                Text(
-                                                                    "识别准确",
-                                                                    color = SuccessColor,
-                                                                    fontSize = 14.sp
-                                                                )
-                                                            }
-                                                        }
-                                                    }
-                                                    // 👎 Dislike / correction
-                                                    TextButton(
-                                                        onClick = { showFeedbackDialog = true },
-                                                        enabled = feedbackState !is Resource.Loading && feedbackState !is Resource.Success
-                                                    ) {
-                                                        Text(
-                                                            "我要纠错",
-                                                            color = WarningColor,
-                                                            fontSize = 14.sp
-                                                        )
-                                                    }
-                                                }
-                                            }
-                                        }
                                     }
                                 }
                             }
 
                             else -> {}
+                        }
+
+                        // ✅ 操作卡片——独立在 wiki 卡片之外，永远不会被内容挤出
+                        GlassCard {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TextButton(onClick = {
+                                    viewModel.clearPrediction()
+                                    resultViewModel.resetWikiState()
+                                }) {
+                                    Text("清除诊断", color = ErrorColor, fontSize = 14.sp)
+                                }
+
+                                val historyId = (syncState as? HistorySyncState.Success)?.historyId
+                                if (historyId != null && historyId != -1) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        if (feedbackState is Resource.Success) {
+                                            Text("✅ 已反馈", color = SuccessColor, fontSize = 13.sp)
+                                        } else {
+                                            TextButton(
+                                                onClick = { viewModel.submitFeedback(historyId, 1, "") },
+                                                enabled = feedbackState !is Resource.Loading
+                                            ) {
+                                                Icon(Icons.Default.ThumbUp, null, tint = SuccessColor,
+                                                    modifier = Modifier.size(15.dp))
+                                                Spacer(Modifier.width(4.dp))
+                                                Text("识别准确", color = SuccessColor, fontSize = 13.sp)
+                                            }
+                                            TextButton(
+                                                onClick = { showFeedbackDialog = true },
+                                                enabled = feedbackState !is Resource.Loading
+                                            ) {
+                                                Text("我要纠错", color = WarningColor, fontSize = 13.sp)
+                                            }
+                                        }
+                                    }
+                                } else if (syncState is HistorySyncState.Loading) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(16.dp),
+                                        color = PrimaryLight,
+                                        strokeWidth = 2.dp
+                                    )
+                                }
+                            }
                         }
                     }
 

@@ -12,8 +12,11 @@ import java.io.ByteArrayOutputStream
 class FeedbackRepository(
     private val predictApiExt: PredictApiExtension,
     private val feedbackApi: FeedbackApi,
-    private val dsManager: DataStoreManager
+    private val dsManager: DataStoreManager,
+    private val context: android.content.Context
 ) {
+    fun getContext() = context
+
     companion object {
         private var cachedHistory: List<HistoryItem>? = null
     }
@@ -43,7 +46,8 @@ class FeedbackRepository(
                     Resource.Error(data?.message ?: "同步失败")
                 }
             } else {
-                Resource.Error("同步服务器异常: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "同步服务器异常: ${response.code()}")
+                Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
             Resource.Error("网络异常: ${e.message}")
@@ -72,7 +76,8 @@ class FeedbackRepository(
                     Resource.Error(data?.message ?: "云端预测失败")
                 }
             } else {
-                Resource.Error("预测服务器异常: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "预测服务器异常: ${response.code()}")
+                Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
             Resource.Error("网络异常: ${e.message}")
@@ -98,7 +103,8 @@ class FeedbackRepository(
                     Resource.Error(body?.msg ?: "获取失败")
                 }
             } else {
-                Resource.Error("服务器异常: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "服务器异常: ${response.code()}")
+                Resource.Error(errorMsg)
             }
         } catch(e: Exception) {
             Resource.Error("网络异常: ${e.message}")
@@ -117,7 +123,8 @@ class FeedbackRepository(
                 val data = response.body()
                 Resource.Success(data?.message ?: data?.msg ?: "提交成功")
             } else {
-                Resource.Error("提交异常: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "提交失败: ${response.code()}")
+                Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
             Resource.Error("网络异常: ${e.message}")

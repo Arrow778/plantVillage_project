@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.clip
 import coil.compose.AsyncImage
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.Info
@@ -57,7 +57,7 @@ fun ResultScreen(
     val context = LocalContext.current
     val dsManager = remember { DataStoreManager(context) }
     val predictRepository = remember { PredictRepository(NetworkClient.predictApi, dsManager) }
-    val feedbackRepo = remember { FeedbackRepository(NetworkClient.predictApiExtension, NetworkClient.feedbackApi, dsManager) }
+    val feedbackRepo = remember { FeedbackRepository(NetworkClient.predictApiExtension, NetworkClient.feedbackApi, dsManager, context) }
 
     val viewModel: ResultViewModel = viewModel(
         factory = ResultViewModelFactory(predictRepository)
@@ -103,7 +103,7 @@ fun ResultScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = onNavigateBack) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "返回", tint = TextMainDark)
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回", tint = TextMainDark)
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -149,11 +149,23 @@ fun ResultScreen(
                                 lineHeight = 24.sp
                             )
                             Spacer(modifier = Modifier.height(24.dp))
+                            // ✅ 重新检测按鈕（强制绕过缓存重新请求）
                             Button(
-                                onClick = onNavigateBack,
-                                colors = ButtonDefaults.buttonColors(containerColor = PrimaryGreen)
+                                onClick = { viewModel.retryWikiInfo(diseaseLabel) },
+                                colors = ButtonDefaults.buttonColors(containerColor = PrimaryLight),
+                                shape = RoundedCornerShape(12.dp)
                             ) {
-                                Text("返回主面板")
+                                Icon(
+                                    Icons.Filled.Warning,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("🔄 重新检测", fontWeight = FontWeight.Bold)
+                            }
+                            Spacer(modifier = Modifier.height(12.dp))
+                            TextButton(onClick = onNavigateBack) {
+                                Text("返回主面板", color = TextMutedDark)
                             }
                         }
                     }

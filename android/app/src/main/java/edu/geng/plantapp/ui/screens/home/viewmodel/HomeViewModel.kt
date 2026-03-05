@@ -13,6 +13,9 @@ import kotlinx.coroutines.launch
 import android.graphics.Bitmap
 import edu.geng.plantapp.ml.TFLiteHelper
 import edu.geng.plantapp.data.remote.CloudPredictData
+import edu.geng.plantapp.data.local.OfflineManager
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 
 sealed class HomeState {
     object Idle : HomeState()
@@ -22,7 +25,8 @@ sealed class HomeState {
 }
 
 class HomeViewModel(
-    private val feedbackRepo: FeedbackRepository
+    private val feedbackRepo: FeedbackRepository,
+    private val offlineManager: OfflineManager? = null // 可选注入
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeState>(HomeState.Idle)
@@ -96,7 +100,13 @@ class HomeViewModel(
                     fetchHistory(forceRefresh = true) // Refresh the list after successful sync
                 }
                 is Resource.Error -> {
-                    _syncState.value = HistorySyncState.Error(res.message ?: "图片存证上云失败")
+                    // ✅ 离线增强：如果云端同步失败，则尝试保存到本地
+                    val saved = offlineManager?.saveRecord(bitmap, label, confidence) ?: false
+                    if (saved) {
+                        _syncState.value = HistorySyncState.Error("当前无网络，暂且存入本地")
+                    } else {
+                        _syncState.value = HistorySyncState.Error(res.message ?: "图片存证上云失败")
+                    }
                 }
                 is Resource.Loading -> {}
             }
@@ -129,8 +139,10 @@ class HomeViewModelFactory(
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            // 在 Factory 中初始化 OfflineManager
+            val offlineManager = OfflineManager(feedbackRepo.getContext()) 
             @Suppress("UNCHECKED_CAST")
-            return HomeViewModel(feedbackRepo) as T
+            return HomeViewModel(feedbackRepo, offlineManager) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -6,6 +6,7 @@ import edu.geng.plantapp.data.local.DataStoreManager
 import edu.geng.plantapp.data.remote.ExpertApi
 import edu.geng.plantapp.data.remote.ExpertStatsResponse
 import edu.geng.plantapp.data.remote.ContributionListResponse
+import edu.geng.plantapp.repository.parseApiError
 import kotlinx.coroutines.flow.first
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -25,7 +26,8 @@ class ExpertRepository(
             if (response.isSuccessful) {
                 Resource.Success(response.body()!!)
             } else {
-                Resource.Error("获取统计失败: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "获取统计失败: ${response.code()}")
+                Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
             Resource.Error("网络异常: ${e.localizedMessage}")
@@ -52,7 +54,8 @@ class ExpertRepository(
             if (response.isSuccessful) {
                 Resource.Success(response.body()?.msg ?: "贡献成功")
             } else {
-                Resource.Error("提交失败: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "提交失败: ${response.code()}")
+                Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
             Resource.Error("网络异常: ${e.localizedMessage}")
@@ -79,7 +82,8 @@ class ExpertRepository(
             if (response.isSuccessful) {
                 Resource.Success(response.body()?.msg ?: "重新提交成功")
             } else {
-                Resource.Error("重新提交失败: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "重新提交失败: ${response.code()}")
+                Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
             Resource.Error("网络异常: ${e.localizedMessage}")
@@ -95,7 +99,8 @@ class ExpertRepository(
             if (response.isSuccessful) {
                 Resource.Success(response.body()!!)
             } else {
-                Resource.Error("获取列表失败: ${response.code()}")
+                val errorMsg = parseApiError(response.errorBody()?.string(), "获取列表失败: ${response.code()}")
+                Resource.Error(errorMsg)
             }
         } catch (e: Exception) {
             Resource.Error("网络异常: ${e.localizedMessage}")

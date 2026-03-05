@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ThumbUp
@@ -47,7 +47,8 @@ fun HistoryScreen(
         FeedbackRepository(
             NetworkClient.predictApiExtension,
             NetworkClient.feedbackApi,
-            dsManager
+            dsManager,
+            context
         )
     }
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(feedbackRepo))
@@ -88,7 +89,7 @@ fun HistoryScreen(
                     navigationIcon = {
                         IconButton(onClick = onNavigateBack) {
                             Icon(
-                                Icons.Default.ArrowBack,
+                                Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "返回",
                                 tint = TextMainDark
                             )

@@ -22,7 +22,7 @@ CONFIG = {
     "EPOCHS": 15,  # 增强数据后，模型需要更多轮次来学习
     "LEARNING_RATE": 0.0001,  # ResNet50 稍降一点学习率
     "VAL_RATE": 0.28,
-    "DATASET_PATH": r"dataset_plant\data1",
+    "DATASET_PATH": os.path.join(os.path.dirname(__file__), "dataset_plant", "data1"),
     "MODEL_SAVE_PATH": "models",
 }
 
