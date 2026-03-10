@@ -107,8 +107,20 @@ def verify_expert():
     invite.is_used = True
     
     db.session.commit()
-    pt.success(f"专家认证通过: 用户 {username}, CODE: {code_str}")
-    return jsonify({"msg": "专家身份认证成功"}), 200
+    
+    # ✅ 关键：原 Token 里的 is_expert=False，必须重新签发一个带 is_expert=True 的新 Token
+    # 客户端收到后需立即替换本地存储的 Token，否则后续专家接口仍会报 403
+    new_token = create_access_token(
+        identity=f"{user.id}",
+        additional_claims={"is_expert": True},
+    )
+    
+    pt.success(f"专家认证通过: 用户 {username}, CODE: {code_str}，已签发新 Token")
+    return jsonify({
+        "msg": "专家身份认证成功",
+        "new_access_token": new_token   # App 用此 Token 替换本地旧 Token
+    }), 200
+
 
 
 @auth_bp.route("/logout", methods=["DELETE"])  # 建议用 DELETE 或 POST

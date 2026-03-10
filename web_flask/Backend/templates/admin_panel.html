@@ -27,43 +27,48 @@
     <main class="dashboard-container">
         <!-- 1. 概览统领模块 -->
         <section class="glass-panel" style="animation-delay: 0.1s;">
-            <h2 class="section-title">📊 聚合控制台 (Dashboard Overview)</h2>
+            <h2 class="section-title">控制台</h2>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-name">激活用户总数 (Users)</div>
+                    <div class="stat-name">激活用户总数</div>
                     <div class="stat-value skeleton" id="statUsers">...</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-name">认证专家人数 (Experts)</div>
+                    <div class="stat-name">认证专家人数</div>
                     <div class="stat-value skeleton" id="statExperts">...</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-name">AI 诊断调用总数 (API Calls)</div>
+                    <div class="stat-name">AI 诊断调用总数</div>
                     <div class="stat-value skeleton" id="statApi">...</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-name">病害图谱库总量 (AI Base + Contrib)</div>
+                    <div class="stat-name">病害图谱库总量</div>
                     <div class="stat-value skeleton" id="statDiseases">...</div>
                 </div>
                 <div class="stat-card" style="border-color: rgba(255,180,100,0.3);">
-                    <div class="stat-name">待审计反馈数 (Pending Audits)</div>
+                    <div class="stat-name">用户待审计反馈数</div>
                     <div class="stat-value skeleton" id="statFeedbacks">...</div>
+                </div>
+                <div class="stat-card" style="border-color: rgba(255,150,150,0.3);">
+                    <div class="stat-name">专家待审计贡献数</div>
+                    <div class="stat-value skeleton" id="statContribs">...</div>
                 </div>
             </div>
         </section>
 
         <!-- 2. 专家准入管理 -->
         <section class="glass-panel" style="animation-delay: 0.2s;">
-            <h2 class="section-title">🔑 专家特权分发核准 (Expert Roles)</h2>
+            <h2 class="section-title">专家特权分发核准 </h2>
             <form id="inviteForm" class="inline-form" onsubmit="generateInvite(event)">
-                <input type="text" id="targetUsername" class="form-input" placeholder="输入绑定用户名 (选填, 为空则生成通用码)">
+                <input type="text" id="targetUsername" class="form-input" placeholder="输入绑定用户名....">
                 <button type="submit" class="btn-action">生成 24H 邀请码</button>
             </form>
             <div id="inviteMsg" class="alert-box"></div>
 
-            <div class="table-container" style="margin-top: 1rem;">
+            <div class="table-container" style="margin-top: 1rem; max-height: 450px; overflow-y: auto;">
                 <table class="glass-table">
-                    <thead>
+                    <thead
+                        style="position: sticky; top: 0; z-index: 2; background: rgba(27,67,50,0.95); backdrop-filter: blur(8px);">
                         <tr>
                             <th>KEY UID</th>
                             <th>🔐 激活码 (Hash)</th>
@@ -82,28 +87,29 @@
 
         <!-- 3. 知识生态与贡献链路审核 -->
         <section class="glass-panel" style="animation-delay: 0.3s;">
-            <h2 class="section-title">📥 专家知识贡献与审计池 (Content Review)</h2>
+            <h2 class="section-title">专家知识贡献与审计</h2>
 
             <div class="inline-form" style="margin-bottom: 1rem;">
                 <select id="reviewFilter" class="form-input form-select" onchange="loadContributions()"
                     style="max-width: 200px;">
-                    <option value="待审核" selected>🛑 待审核队列 (Pending)</option>
-                    <option value="all">📚 历史全局记录 (All)</option>
+                    <option value="待审核" selected>待审核队列</option>
+                    <option value="all">历史全局记录</option>
                 </select>
                 <div style="color:var(--text-muted); font-size: 0.9rem; margin-left:1rem;">(可下拉切换查阅历史归档记录)</div>
             </div>
 
-            <div class="table-container">
+            <div class="table-container" style="max-height: 450px; overflow-y: auto;">
                 <table class="glass-table">
-                    <thead>
+                    <thead
+                        style="position: sticky; top: 0; z-index: 2; background: rgba(27,67,50,0.95); backdrop-filter: blur(8px);">
                         <tr>
-                            <th>审计单号</th>
-                            <th>专家签署方</th>
-                            <th>病害归类靶点</th>
-                            <th>活体样本库 (Img)</th>
-                            <th>干预防案提议</th>
-                            <th>流程状态 & 反馈</th>
-                            <th>人工复核动作</th>
+                            <th style="width:8%">审计单号</th>
+                            <th style="width:12%">专家用户名</th>
+                            <th style="width:15%">病理特征</th>
+                            <th style="width:10%">图片</th>
+                            <th style="width:26%">干预防案提议</th>
+                            <th style="width:14%">流程状态 & 反馈</th>
+                            <th style="width:15%">操作</th>
                         </tr>
                     </thead>
                     <tbody id="contributionTableBody">
@@ -114,37 +120,31 @@
 
         <!-- 3.5 用户正负反馈审计 -->
         <section class="glass-panel" style="animation-delay: 0.35s;">
-            <h2 class="section-title">👍👎 用户识别反馈审计池 (Feedback Audit)</h2>
-            <p class="hint-text">负反馈（点踩）是最有价值的训练样本线索。审计每条反馈，采纳真实错误案例，忽略用户误报，为后续模型迭代提供高质量数据。</p>
+            <h2 class="section-title">用户识别反馈审计池</h2>
+            <p class="hint-text">负反馈（纠错）是最有价值的训练样本线索。正反馈无需审计，此处仅展示用户的「我要纠错」记录，采纳真实错误案例、忽略用户误报。</p>
 
             <div class="inline-form" style="margin-bottom: 1rem; gap: 0.75rem;">
-                <select id="fbScoreFilter" class="form-input form-select" onchange="loadFeedbacks()"
-                    style="max-width:170px;">
-                    <option value="all">📊 全部反馈</option>
-                    <option value="-1" selected>👎 仅负反馈 (纠错)</option>
-                    <option value="1">👍 仅正反馈 (点赞)</option>
-                </select>
                 <select id="fbAuditFilter" class="form-input form-select" onchange="loadFeedbacks()"
                     style="max-width:170px;">
-                    <option value="pending" selected>🕐 待审计</option>
-                    <option value="all">📚 全部记录</option>
+                    <option value="pending" selected>待审计</option>
+                    <option value="all">全部记录</option>
                 </select>
                 <div style="color:var(--text-muted); font-size: 0.9rem;">切换过滤条件后会自动刷新列表</div>
             </div>
 
-            <div class="table-container">
+            <div class="table-container" style="max-height: 450px; overflow-y: auto;">
                 <table class="glass-table">
-                    <thead>
+                    <thead
+                        style="position: sticky; top: 0; z-index: 2; background: rgba(27,67,50,0.95); backdrop-filter: blur(8px);">
                         <tr>
-                            <th style="width:6%">ID</th>
+                            <th style="width:5%">ID</th>
                             <th style="width:10%">用户</th>
-                            <th style="width:8%">类型</th>
-                            <th style="width:12%">AI 预测结果</th>
+                            <th style="width:20%">AI预测结果</th>
                             <th style="width:8%">置信度</th>
                             <th style="width:12%">识别原图</th>
-                            <th style="width:18%">用户说明</th>
-                            <th style="width:8%">审计状态</th>
-                            <th style="width:18%">审计操作</th>
+                            <th style="width:25%">用户说明</th>
+                            <th style="width:8%">状态</th>
+                            <th style="width:12%">操作</th>
                         </tr>
                     </thead>
                     <tbody id="feedbackTableBody">
@@ -155,7 +155,7 @@
 
         <!-- 4. 账户治理与AI引擎字典 -->
         <section class="glass-panel" style="animation-delay: 0.4s;">
-            <h2 class="section-title">🧠 推理引擎语料库映射表 (Dataset Dict)</h2>
+            <h2 class="section-title">已有植物病理资料库</h2>
             <p class="hint-text">
                 Kaggle 数据集底层映射关系：左侧为引擎运行时返回的英文结构化 `Label`，右侧为系统利用此表动态聚合的中文字典释义及防治规范输出。
             </p>
@@ -166,10 +166,10 @@
                         style="position: sticky; top: 0; background: rgba(27, 67, 50, 0.9); backdrop-filter: blur(10px);">
                         <tr>
                             <th style="width: 8%">CID</th>
-                            <th style="width: 25%">模型主键 (Hash Label)</th>
-                            <th style="width: 15%">病症主名 (Name)</th>
-                            <th style="width: 25%">生物靶点特征简述</th>
-                            <th style="width: 27%">库内嵌防治规范</th>
+                            <th style="width: 25%">模型Label</th>
+                            <th style="width: 15%">中文名</th>
+                            <th style="width: 25%">病理特征</th>
+                            <th style="width: 27%">防治规范</th>
                         </tr>
                     </thead>
                     <tbody id="dictTableBody">
@@ -177,17 +177,18 @@
                 </table>
             </div>
 
-            <h2 class="section-title" style="margin-top: 1rem;">🛡️ 全域用户节点治理 (Identity Control)</h2>
-            <div class="table-container">
+            <h2 class="section-title" style="margin-top: 1rem;">👥 用户管理</h2>
+            <div class="table-container" style="max-height: 260px; overflow-y: auto;">
                 <table class="glass-table">
-                    <thead>
+                    <thead
+                        style="position: sticky; top: 0; z-index: 2; background: rgba(27,67,50,0.95); backdrop-filter: blur(8px);">
                         <tr>
-                            <th>平台 UID</th>
-                            <th>账号主体串 (Username)</th>
-                            <th>高阶权限 (Expert)</th>
-                            <th>根级别权限 (Root)</th>
-                            <th>账户风控态势</th>
-                            <th>治理抓手</th>
+                            <th>用户 ID</th>
+                            <th>用户名</th>
+                            <th>专家认证</th>
+                            <th>管理员</th>
+                            <th>账号状态</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody id="userTableBody">
@@ -252,6 +253,18 @@
                     el.classList.remove('skeleton');
                     el.innerText = d2.length;
                     el.style.color = d2.length > 0 ? '#ffb347' : '#a8dadc';
+                }
+            } catch (e) { }
+
+            // Load pending contributions count
+            try {
+                const res3 = await fetch('/admin/api/contributions?status=待审核');
+                if (res3.ok) {
+                    const d3 = await res3.json();
+                    const el = document.getElementById('statContribs');
+                    el.classList.remove('skeleton');
+                    el.innerText = d3.total ?? d3.length ?? 0;
+                    el.style.color = (d3.total ?? d3.length ?? 0) > 0 ? '#ff9999' : '#a8dadc';
                 }
             } catch (e) { }
         }
@@ -341,11 +354,11 @@
 
                 data.forEach(c => {
                     const row = document.createElement('tr');
-                    let actions = '-';
+                    let actions = '<span style="color:#6c757d;">—</span>';
                     if (c.status === '待审核') {
                         actions = `
-                            <button class="btn-sm btn-approve" onclick="reviewContrib(${c.id}, 'approve')">准入合并</button>
-                            <button class="btn-sm btn-reject" onclick="reviewContrib(${c.id}, 'reject')">退件驳回</button>
+                            <button class="btn-sm btn-approve" onclick="reviewContrib(${c.id}, 'approve')">准入</button>
+                            <button class="btn-sm btn-reject" onclick="reviewContrib(${c.id}, 'reject')">驳回</button>
                         `;
                     }
 
@@ -402,55 +415,56 @@
 
         // Feedback Audit
         async function loadFeedbacks() {
-            const score = document.getElementById('fbScoreFilter').value;
             const audit = document.getElementById('fbAuditFilter').value;
-            const res = await fetch(`/admin/api/feedbacks?score=${score}&audit=${audit}`);
+            // 情况：只审计负反馈，过滤参数固定 score=-1
+            const res = await fetch(`/admin/api/feedbacks?score=-1&audit=${audit}`);
             const tbody = document.getElementById('feedbackTableBody');
             tbody.innerHTML = '';
 
             if (!res.ok) {
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#ff4d6d;padding:1.5rem;">⚠️ 加载失败</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#ff4d6d;padding:1.5rem;">⚠️ 加载失败</td></tr>`;
                 return;
             }
             const data = await res.json();
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#adb5bd;padding:2rem;">📭 暂无符合条件的反馈记录</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#adb5bd;padding:2rem;">� 暂无符合条件的反馈记录</td></tr>`;
                 return;
             }
 
             data.forEach(fb => {
                 const row = document.createElement('tr');
-                const isNeg = fb.score === -1;
-                const scoreLabel = isNeg
-                    ? `<span class="badge badge-error">👎 负反馈</span>`
-                    : `<span class="badge badge-success">👍 正反馈</span>`;
 
                 let auditBadge = '<span class="badge badge-warning">待审计</span>';
                 if (fb.audit_status === 'adopt') auditBadge = '<span class="badge badge-success">已采纳</span>';
                 else if (fb.audit_status === 'ignore') auditBadge = '<span class="badge badge-gray">已忽略</span>';
 
                 const imgHtml = fb.image_url
-                    ? `<a href="${fb.image_url}" target="_blank"><img src="${fb.image_url}" class="thumb-img" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.outerHTML='<span style=color:#6c757d>无图</span>'"></a>`
+                    ? `<a href="${fb.image_url}" target="_blank"><img src="${fb.image_url}" style="width:56px;height:56px;object-fit:cover;border-radius:6px;display:block;" onerror="this.outerHTML='<span style=color:#6c757d>无图</span>'"></a>`
                     : '<span style="color:#6c757d">无图</span>';
 
+                // 用户说明展开显示，超长才截断，鼠标悬停显全文
                 const reasonHtml = fb.reason
-                    ? `<span title="${fb.reason}" style="font-size:0.85rem;color:#e9c46a;">${fb.reason.length > 30 ? fb.reason.slice(0, 30) + '…' : fb.reason}</span>`
-                    : '<span style="color:#6c757d">—</span>';
+                    ? `<span title="${fb.reason}" style="font-size:0.85rem;color:#e9c46a;word-break:break-all;">${fb.reason.length > 40 ? fb.reason.slice(0, 40) + '…' : fb.reason}</span>`
+                    : '<span style="color:#6c757d">无说明</span>';
 
                 let actions = '<span style="color:#6c757d;">—</span>';
                 if (!fb.audit_status) {
                     actions = `
-                        <button class="btn-sm btn-approve" onclick="auditFeedback(${fb.id},'adopt')" title="确认此反馈有效，标记为待改进样本">✅ 采纳</button>
-                        <button class="btn-sm btn-reject" onclick="auditFeedback(${fb.id},'ignore')" title="用户搞错了，忽略此反馈">🚫 忽略</button>
+                        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start;">
+                            <button class="btn-sm btn-approve" onclick="auditFeedback(${fb.id},'adopt')" title="确认此反馈有效，标记为待改进样本">✅ 采纳</button>
+                            <button class="btn-sm btn-reject" onclick="auditFeedback(${fb.id},'ignore')" title="用户搞错了，忽略此反馈">🚫 忽略</button>
+                        </div>
                     `;
                 }
 
+                // AI预测结果：中文名 + 英文label悬停提示
+                const predHtml = `<span title="${fb.prediction || ''}}" style="font-size:0.88rem;font-weight:500;">${fb.common_name || fb.prediction || '—'}</span>`;
+
                 row.innerHTML = `
-                    <td style="color:var(--text-muted);">#F${fb.id}</td>
+                    <td style="color:var(--text-muted);white-space:nowrap;">#${fb.id}</td>
                     <td><span style="color:#a8dadc;">@${fb.username}</span></td>
-                    <td>${scoreLabel}</td>
-                    <td style="font-weight:500;font-size:0.9rem;" title="${fb.prediction}">${fb.common_name || fb.prediction || '—'}</td>
-                    <td style="color:#a8dadc;">${fb.confidence}</td>
+                    <td>${predHtml}</td>
+                    <td style="color:#a8dadc;white-space:nowrap;">${fb.confidence}</td>
                     <td>${imgHtml}</td>
                     <td>${reasonHtml}</td>
                     <td>${auditBadge}</td>
@@ -510,19 +524,19 @@
 
                     let banAction = `
                         <button class="btn-sm ${isActive ? 'btn-reject' : 'btn-approve'}" onclick="toggleBanUser(${u.id}, ${!isActive})">
-                            ${isActive ? '⛔ 下达封杀令' : '♻️ 涤除封禁 (恢复)'}
+                            ${isActive ? '⛔ 封禁账号' : '✅ 解除封禁'}
                         </button>
                     `;
-                    if (u.is_admin) banAction = '<span class="badge badge-gray">超管豁免权 (Immutable)</span>';
+                    if (u.is_admin) banAction = '<span class="badge badge-gray">管理员（不可操作）</span>';
 
                     row.innerHTML = `
-                        <td>#U${u.id}</td>
+                        <td>#${u.id}</td>
                         <td style="font-weight:600;">${u.username}</td>
-                        <td>${u.is_expert ? '<span class="badge badge-success">专家签注</span>' : '<span style="color:#6c757d">—</span>'}</td>
-                        <td>${u.is_admin ? '<span class="badge badge-warning">系统总管指令域</span>' : '<span style="color:#6c757d">—</span>'}</td>
+                        <td>${u.is_expert ? '<span class="badge badge-success">已认证专家</span>' : '<span style="color:#6c757d">普通用户</span>'}</td>
+                        <td>${u.is_admin ? '<span class="badge badge-warning">管理员</span>' : '<span style="color:#6c757d">—</span>'}</td>
                         <td>${isActive
-                            ? '<span style="color:#a8dadc;">🟢 通信绿洲 (正常)</span>'
-                            : '<span style="color:#ffb3c1;">🔴 熔断封锁 (Disabled)</span>'}
+                            ? '<span style="color:#a8dadc;">🟢 正常</span>'
+                            : '<span style="color:#ffb3c1;">🔴 已封禁</span>'}
                         </td>
                         <td>${banAction}</td>
                     `;
@@ -532,8 +546,8 @@
         }
 
         async function toggleBanUser(id, targetState) {
-            const actionText = targetState ? "放行 (解封)" : "阻断斩杀 (封号)";
-            if (!confirm(`⚠️ 危险: 确定要对此节点实施『 ${actionText} 』管控动作吗？`)) return;
+            const actionText = targetState ? "解除封禁" : "封禁";
+            if (!confirm(`确定要${actionText}该用户吗？`)) return;
 
             const res = await fetch(`/admin/api/users/${id}/ban`, {
                 method: 'PATCH',

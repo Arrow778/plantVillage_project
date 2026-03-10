@@ -27,7 +27,7 @@ app.register_blueprint(admin_bp, url_prefix="/admin")
 
 @app.route("/")
 def index():
-    return redirect("/admin")
+    return redirect("/admin/")
 
 
 # 管理员界面的图片可能引用自 uploads/contributions 等，需要将路径重定向到 APIs 下对应的文件夹，保证共享同一个上传池

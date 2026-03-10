@@ -110,7 +110,14 @@ class AuthRepository(
             val req = edu.geng.plantapp.data.remote.VerifyExpertRequest(username, expertCode)
             val response = authApi.verifyExpert(req)
             if (response.isSuccessful) {
-                Resource.Success(response.body()?.msg ?: "认证成功")
+                val body = response.body()
+                // ✅ 关键：用后端签发的新 Token（含 is_expert=true）替换本地旧 Token
+                // 否则旧 Token 的 JWT Payload 里 is_expert 仍为 false，专家接口会一直报 403
+                val newToken = body?.new_access_token
+                if (!newToken.isNullOrEmpty()) {
+                    dsManager.saveToken(newToken)
+                }
+                Resource.Success(body?.msg ?: "认证成功")
             } else {
                 val errorMsg = parseApiError(response.errorBody()?.string(), "专家认证失败: ${response.code()}")
                 Resource.Error(errorMsg)
@@ -119,4 +126,5 @@ class AuthRepository(
             Resource.Error("网络连接异常: ${e.localizedMessage}")
         }
     }
+
 }

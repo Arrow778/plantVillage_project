@@ -54,6 +54,7 @@ def login_page():
         return redirect(url_for('admin.dashboard_page'))
     return render_template('admin_login.html')
 
+@admin_bp.route('', methods=['GET'])
 @admin_bp.route('/', methods=['GET'])
 @admin_bp.route('/dashboard', methods=['GET'])
 @admin_required
@@ -69,15 +70,22 @@ def api_login():
     password = data.get("password", None)
     
     if not username or not password:
-        return jsonify({"msg": "Missing username or password"}), 400
+        return jsonify({"msg": "请填写用户名和密码"}), 400
         
     user = User.query.filter_by(username=username).first()
-    if not user or not user.check_password(password) or not user.is_admin:
-        return jsonify({"msg": "Bad username or password or not admin"}), 401
+    
+    if not user:
+        return jsonify({"msg": "该用户名不存在，请检查输入"}), 401
+    
+    if not user.check_password(password):
+        return jsonify({"msg": "密码错误，请重新输入"}), 401
+    
+    if not user.is_admin:
+        return jsonify({"msg": "您的账号没有管理员权限"}), 403
     
     # 使用 Flask session 持有会话
     session['admin_id'] = user.id
-    return jsonify({"msg": "Login successful"}), 200
+    return jsonify({"msg": "登录成功"}), 200
 
 @admin_bp.route('/api/logout', methods=['POST'])
 def api_logout():

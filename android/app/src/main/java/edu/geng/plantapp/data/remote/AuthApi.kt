@@ -44,7 +44,8 @@ data class VerifyExpertRequest(
 )
 
 data class VerifyExpertResponse(
-    val msg: String?
+    val msg: String?,
+    val new_access_token: String? = null  // 认证成功后后端会签发含 is_expert=true 的新 Token
 )
 
 interface AuthApi {

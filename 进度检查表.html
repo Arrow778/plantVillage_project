@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机与大数据专业毕业论文进度检查表</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        .btn-add-row {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .btn-add-row:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-remove-row {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .file-upload {
+            border: 2px dashed #3498db;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            background-color: #f0f8ff;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .file-upload:hover {
+            background-color: #e1f0fa;
+        }
+
+        .preview-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .preview-item {
+            width: 200px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .preview-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .preview-item input {
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .btn-remove-img {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .info-box {
+            background-color: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+    </style>
+    <!-- 引入 JSZip 用于前端打包 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>计算机与大数据专业毕业论文进度检查表</h1>
+
+        <div class="info-box">
+            <p><strong>填报说明：</strong></p>
+            <ol>
+                <li>本表专为<strong>计算机科学与技术</strong>和<strong>数据科学与大数据技术</strong>专业的毕设学生设计。</li>
+                <li>提交后，系统将自动把您的进度数据（<code>.json</code>）和所有截图（<code>images/</code>）打包成以您“学号_姓名”命名的压缩包
+                    (<code>.zip</code>) 并下载。</li>
+                <li>您只需将下载的压缩包原样发送或提交给导师即可，这些数据后续将交由大模型（LLM）进行自动的进度评估与分析。</li>
+            </ol>
+        </div>
+
+        <form id="progressForm">
+            <h2>一、 基本信息</h2>
+            <div class="form-group">
+                <label>学生姓名：</label>
+                <input type="text" id="studentName" required placeholder="请输入真实姓名">
+            </div>
+            <div class="form-group">
+                <label>学号：</label>
+                <input type="text" id="studentId" required placeholder="请输入学号">
+            </div>
+            <div class="form-group">
+                <label>所属专业：</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="major" value="计算机科学与技术" required>
+                        计算机科学与技术</label>
+                    <label class="radio-item"><input type="radio" name="major" value="数据科学与大数据技术"> 数据科学与大数据技术</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>论文题目：</label>
+                <input type="text" id="thesisTitle" required placeholder="请输入毕业论文完整题目">
+            </div>
+            <div class="form-group">
+                <label>填报日期：</label>
+                <input type="date" id="reportDate" required>
+            </div>
+
+            <h2>二、 工程进度检查 (系统研发或算法实验)</h2>
+            <div class="form-group">
+                <label>工程总进度评估 (%)：</label>
+                <input type="number" id="engineeringProgress" min="0" max="100" placeholder="例如：40">
+            </div>
+            <div class="form-group">
+                <label>工程产物链接 (必填，如 GitHub 仓库)：</label>
+                <input type="url" id="githubLink" required placeholder="https://github.com/...">
+                <small style="color: #7f8c8d; display:block; margin-top:5px;">仓库内必须包含 README.md 和依赖说明文件(如
+                    requirements.txt)。</small>
+            </div>
+
+            <h3>2.1 模块研发状态</h3>
+            <table class="status-table">
+                <tr>
+                    <th>模块</th>
+                    <th>状态</th>
+                </tr>
+                <tr>
+                    <td>需求分析与系统架构设计</td>
+                    <td>
+                        <select id="statusSysDesign">
+                            <option value="未开始">未开始</option>
+                            <option value="进行中">进行中</option>
+                            <option value="已完成">已完成</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>开发环境搭建与数据准备</td>
+                    <td>
+                        <select id="statusEnvSetup">
+                            <option value="未开始">未开始</option>
+                            <option value="进行中">进行中</option>
+                            <option value="已完成">已完成</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>核心算法/核心功能模块开发</td>
+                    <td>
+                        <select id="statusCoreDev">
+                            <option value="未开始">未开始</option>
+                            <option value="进行中">进行中</option>
+                            <option value="已完成">已完成</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>外围业务/前端UI/可视化大屏</td>
+                    <td>
+                        <select id="statusUIDev">
+                            <option value="未开始">未开始</option>
+                            <option value="进行中">进行中</option>
+                            <option value="已完成">已完成</option>
+                            <option value="本课题不涉及">本课题不涉及</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>系统联调测试与实验验证</td>
+                    <td>
+                        <select id="statusTesting">
+                            <option value="未开始">未开始</option>
+                            <option value="进行中">进行中</option>
+                            <option value="已完成">已完成</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="form-group" style="margin-top:20px;">
+                <label>2.2 具体工程进展与阶段性产物描述：</label>
+                <textarea id="engineeringDetails" placeholder="总览性地描述目前已经跑通的模块或代码，越具体越好。"></textarea>
+            </div>
+
+            <h3>2.3 详细系统设计及完成情况描述</h3>
+            <table id="designTable">
+                <thead>
+                    <tr>
+                        <th>系统模块 / 算法步骤</th>
+                        <th>详细设计说明 (功能描述 / 算法原理简述)</th>
+                        <th>当前完成情况</th>
+                        <th>备注 (阻碍等)</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="dt-module" placeholder="例如：用户权限管理"></td>
+                        <td><input type="text" class="dt-design" placeholder="例如：基于 JWT 的验证"></td>
+                        <td>
+                            <select class="dt-status">
+                                <option value="未开始">未开始</option>
+                                <option value="编码中">编码中</option>
+                                <option value="已完成">已完成</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="dt-notes" placeholder="问题备注"></td>
+                        <td><button type="button" class="btn-remove-row" onclick="removeRow(this)">删除</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn-add-row" onclick="addRow()">+ 新增模块记录</button>
+
+            <div class="form-group" style="margin-top:20px;">
+                <label>2.4 遇到的工程技术阻碍：</label>
+                <textarea id="engineeringBlockers" placeholder="记录卡住工程继续推进的具体难题，如报错信息、算法不收敛等。"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>2.5 系统界面或实验结果截图：</label>
+                <div class="file-upload" onclick="document.getElementById('imageUpload').click()">
+                    <p>点击此处上传截图 (支持 jpg, png, jpeg)</p>
+                    <input type="file" id="imageUpload" multiple accept="image/*" style="display: none;"
+                        onchange="handleImageUpload(event)">
+                </div>
+                <div class="preview-area" id="imagePreviewArea"></div>
+            </div>
+
+            <h2>三、 论文撰写进度检查</h2>
+            <div class="form-group">
+                <label>论文总撰写进度评估 (%)：</label>
+                <input type="number" id="writingProgress" min="0" max="100" placeholder="例如：30">
+            </div>
+            <div class="form-group">
+                <label>当前正文大致字数：</label>
+                <input type="number" id="wordCount" placeholder="如 5000">
+            </div>
+
+            <h3>3.1 各章节撰写状态</h3>
+            <table class="status-table">
+                <tr>
+                    <th>章节</th>
+                    <th>状态</th>
+                </tr>
+                <tr>
+                    <td>外文文献翻译</td>
+                    <td><select id="w_translate">
+                            <option>未开始</option>
+                            <option>进行中</option>
+                            <option>已提交初稿</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td>第一章：绪论（背景、现状、意义）</td>
+                    <td><select id="w_ch1">
+                            <option>未开始</option>
+                            <option>进行中</option>
+                            <option>已成文</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td>第二章：相关技术介绍与理论基础</td>
+                    <td><select id="w_ch2">
+                            <option>未开始</option>
+                            <option>进行中</option>
+                            <option>已成文</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td>第三章：系统总体设计/算法模型设计</td>
+                    <td><select id="w_ch3">
+                            <option>未开始</option>
+                            <option>进行中</option>
+                            <option>已成文</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td>第四章：系统详细实现/实验设计与结果分析</td>
+                    <td><select id="w_ch4">
+                            <option>未开始</option>
+                            <option>进行中</option>
+                            <option>已成文</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td>第五章：总结与展望</td>
+                    <td><select id="w_ch5">
+                            <option>未开始</option>
+                            <option>进行中</option>
+                            <option>已成文</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td>致谢与参考文献排版</td>
+                    <td><select id="w_ref">
+                            <option>未开始</option>
+                            <option>进行中</option>
+                            <option>已成文</option>
+                        </select></td>
+                </tr>
+            </table>
+
+            <div class="form-group" style="margin-top:20px;">
+                <label>3.2 写作推进重点与薄弱点：</label>
+                <textarea id="writingBlockers" placeholder="简述当前卡文或写得吃力的地方。"></textarea>
+            </div>
+
+            <h2>四、 本阶段总结与下一步计划</h2>
+            <div class="form-group">
+                <label>4.1 近期核心进展总结：</label>
+                <textarea id="recentSummary" placeholder="用1-2句话总结自上一次汇报以来的最核心产出。"></textarea>
+            </div>
+            <div class="form-group">
+                <label>4.2 下一步（未来1-2周）工作清单：</label>
+                <textarea id="nextSteps" placeholder="列出接下来的计划。"></textarea>
+            </div>
+            <div class="form-group">
+                <label>4.3 需导师或AI助手的协助事项：</label>
+                <textarea id="helpRequest" placeholder="填写希望获取的具体帮助。"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">提交并自动打包为 ZIP 下载</button>
+        </form>
+    </div>
+
+    <script>
+        // 默认设置今天日期
+        document.getElementById('reportDate').valueAsDate = new Date();
+
+        let uploadedImages = [];
+
+        function handleImageUpload(event) {
+            const files = event.target.files;
+            const previewArea = document.getElementById('imagePreviewArea');
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgData = e.target.result;
+                    const imgId = 'img_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+
+                    uploadedImages.push({
+                        id: imgId,
+                        filename: file.name,
+                        dataUrl: imgData,
+                        file: file,
+                        description: ''
+                    });
+
+                    renderImages();
+                }
+                reader.readAsDataURL(file);
+            });
+
+            // 清空input允许重复选图
+            event.target.value = '';
+        }
+
+        function renderImages() {
+            const previewArea = document.getElementById('imagePreviewArea');
+            previewArea.innerHTML = '';
+
+            uploadedImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `
+                <button type="button" class="btn-remove-img" onclick="removeImage('${img.id}')">×</button>
+                <img src="${img.dataUrl}" alt="${img.filename}">
+                <input type="text" placeholder="填写简短截图说明" value="${img.description}" onchange="updateImageDesc('${img.id}', this.value)">
+            `;
+                previewArea.appendChild(div);
+            });
+        }
+
+        function removeImage(id) {
+            uploadedImages = uploadedImages.filter(img => img.id !== id);
+            renderImages();
+        }
+
+        function updateImageDesc(id, desc) {
+            const img = uploadedImages.find(i => i.id === id);
+            if (img) img.description = desc;
+        }
+
+        function addRow() {
+            const tbody = document.querySelector('#designTable tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+            <td><input type="text" class="dt-module" placeholder="例如：用户权限管理"></td>
+            <td><input type="text" class="dt-design" placeholder="例如：基于 JWT 的验证"></td>
+            <td>
+                <select class="dt-status">
+                    <option value="未开始">未开始</option>
+                    <option value="编码中">编码中</option>
+                    <option value="已完成">已完成</option>
+                </select>
+            </td>
+            <td><input type="text" class="dt-notes" placeholder="问题备注"></td>
+            <td><button type="button" class="btn-remove-row" onclick="removeRow(this)">删除</button></td>
+        `;
+            tbody.appendChild(tr);
+        }
+
+        function removeRow(btn) {
+            btn.closest('tr').remove();
+        }
+
+        // 下载文件的辅助函数
+        function downloadTextFile(content, fileName, contentType) {
+            const a = document.createElement("a");
+            const file = new Blob([content], { type: contentType });
+            a.href = URL.createObjectURL(file);
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        // 下载图片的辅助函数
+        function downloadBase64Image(base64Url, filename) {
+            const a = document.createElement("a");
+            a.href = base64Url;
+            a.download = filename;
+            a.click();
+        }
+
+        document.getElementById('progressForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const stdName = document.getElementById('studentName').value.trim();
+            const stdId = document.getElementById('studentId').value.trim();
+            const reportDate = document.getElementById('reportDate').value.replace(/-/g, '');
+
+            if (!stdName || !stdId) {
+                alert('学生姓名和学号不能为空！');
+                return;
+            }
+
+            // 收集详细设计表格数据
+            const designDetails = [];
+            document.querySelectorAll('#designTable tbody tr').forEach(tr => {
+                const module = tr.querySelector('.dt-module').value.trim();
+                if (module) {
+                    designDetails.push({
+                        module: module,
+                        design: tr.querySelector('.dt-design').value.trim(),
+                        status: tr.querySelector('.dt-status').value,
+                        notes: tr.querySelector('.dt-notes').value.trim()
+                    });
+                }
+            });
+
+            // 收集图片元数据
+            const imageMetadata = uploadedImages.map((img, idx) => {
+                // 给图片重新命名，便于存放
+                const extension = img.filename.split('.').pop() || 'png';
+                const newFilename = `${stdId}_${stdName}_${reportDate}_screenshot_${idx + 1}.${extension}`;
+                return {
+                    originalName: img.filename,
+                    savedName: newFilename,
+                    description: img.description
+                };
+            });
+
+            // 封装提交数据JSON
+            const formData = {
+                doc_type: "thesis_progress_report",
+                metadata: {
+                    studentName: stdName,
+                    studentId: stdId,
+                    major: document.querySelector('input[name="major"]:checked')?.value || '',
+                    thesisTitle: document.getElementById('thesisTitle').value,
+                    reportDate: document.getElementById('reportDate').value
+                },
+                engineering: {
+                    totalProgress: document.getElementById('engineeringProgress').value,
+                    githubLink: document.getElementById('githubLink').value,
+                    modulesStatus: {
+                        sysDesign: document.getElementById('statusSysDesign').value,
+                        envSetup: document.getElementById('statusEnvSetup').value,
+                        coreDev: document.getElementById('statusCoreDev').value,
+                        uiDev: document.getElementById('statusUIDev').value,
+                        testing: document.getElementById('statusTesting').value
+                    },
+                    progressDetails: document.getElementById('engineeringDetails').value,
+                    designDetails: designDetails,
+                    blockers: document.getElementById('engineeringBlockers').value,
+                    images: imageMetadata
+                },
+                writing: {
+                    totalProgress: document.getElementById('writingProgress').value,
+                    wordCount: document.getElementById('wordCount').value,
+                    chaptersStatus: {
+                        translate: document.getElementById('w_translate').value,
+                        chapter1: document.getElementById('w_ch1').value,
+                        chapter2: document.getElementById('w_ch2').value,
+                        chapter3: document.getElementById('w_ch3').value,
+                        chapter4: document.getElementById('w_ch4').value,
+                        chapter5: document.getElementById('w_ch5').value,
+                        references: document.getElementById('w_ref').value
+                    },
+                    blockers: document.getElementById('writingBlockers').value
+                },
+                summaryAndPlan: {
+                    recentSummary: document.getElementById('recentSummary').value,
+                    nextSteps: document.getElementById('nextSteps').value,
+                    helpRequest: document.getElementById('helpRequest').value
+                }
+            };
+
+            const jsonString = JSON.stringify(formData, null, 2);
+            const baseFilename = `${stdId}_${stdName}_${reportDate}_进度检查表`;
+            const folderName = `${stdId}_${stdName}`;
+
+            alert('即将为您打包生成包含 JSON 数据及截图的 ZIP 压缩文件。请直接提交该压缩包。');
+
+            const zip = new JSZip();
+            // 创建主文件夹
+            const rootFolder = zip.folder(folderName);
+
+            // 1. 在主文件夹下添加JSON数据
+            rootFolder.file(baseFilename + '.json', jsonString);
+
+            // 2. 在主文件夹下创建images子文件夹，并添加图片
+            const imgFolder = rootFolder.folder("images");
+            uploadedImages.forEach((img, idx) => {
+                const metaInfo = imageMetadata[idx];
+                // 提取base64数据部分，img.dataUrl 格式如 "data:image/png;base64,iVBORw0KGgo..."
+                const base64Data = img.dataUrl.split(',')[1];
+                imgFolder.file(metaInfo.savedName, base64Data, { base64: true });
+            });
+
+            // 3. 生成并下载ZIP文件
+            zip.generateAsync({ type: "blob" }).then(function (content) {
+                // 使用 FileSaver.js 替代原生 a 标签下载，确保部分浏览器本地能保留原本的文件名和后缀
+                saveAs(content, folderName + '.zip');
+            });
+
+        });
+    </script>
+</body>
+
+</html>
